@@ -1,0 +1,14 @@
+
+  <div>
+  </div>
+
+----------
+
+export default {
+}
+
+----------
+
+div {
+  color: red;
+}

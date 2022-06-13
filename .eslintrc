@@ -1,0 +1,64 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "plugins": ["@typescript-eslint", "import", "unused-imports"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "class",
+        "format": ["PascalCase"],
+        "custom": {
+          "regex": "send|start|find",
+          "match": false
+        }
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+    "unused-imports/no-unused-imports": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "parent",
+          "sibling",
+          "index",
+          "object",
+          "type"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "parent",
+            "position": "before"
+          }
+        ],
+        "alphabetize": {
+          "order": "asc"
+        },
+        "newlines-between": "always"
+      }
+    ]
+  },
+  "root": true
+}

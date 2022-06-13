@@ -1,0 +1,35 @@
+{
+  "name": "composition-api-convertor",
+  "version": "0.0.1",
+  "description": "This is a convertor of the option-api to the composition-api",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write 'src/**/*.ts'",
+    "test": "jest"
+  },
+  "keywords": [
+    "vue",
+    "composition-api",
+    "convertor"
+  ],
+  "author": "sor4chi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^28.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "@vue/compiler-sfc": "^3.2.37",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "jest": "^28.1.1",
+    "prettier": "^2.6.2",
+    "ts-jest": "^28.0.4",
+    "vue-template-compiler": "^2.6.14"
+  }
+}
