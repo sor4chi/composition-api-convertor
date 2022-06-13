@@ -1,4 +1,3 @@
-// extractor.ts
 import * as vueCompilerSFC from '@vue/compiler-sfc';
 import * as vueTemplateCompiler from 'vue-template-compiler';
 
