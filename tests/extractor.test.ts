@@ -2,6 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { extractFromVue2SFC, extractFromVue3SFC } from './../src/extractor';
+import { outputVue2ExtractedContent, outputVue3ExtractedContent } from './../src/output';
 import { convertMultipleDataFormats } from './utils';
 
 const srcPath = path.join(__dirname, './src');
@@ -12,13 +13,17 @@ describe('Extractor', () => {
       path.join(srcPath, './Vue2OptionApi.vue'),
       'utf8'
     );
-    const { template, script, style } = extractFromVue2SFC(file);
+    const { template, script, styles } = extractFromVue2SFC(file);
     const answer = fs.readFileSync(
       path.join(srcPath, './Vue2OptionApi.answer.txt'),
       'utf8'
     );
-    const convertedScripts = [template, script, style];
-    expect(convertMultipleDataFormats(convertedScripts)).toBe(answer);
+    const outputs = outputVue2ExtractedContent(template, script, styles);
+    expect(convertMultipleDataFormats([
+      outputs.convertedTemplateContent,
+      outputs.convertedScriptContent,   
+      outputs.convertedStylesContent  
+    ])).toBe(answer);
   });
 
   it('should extract the correct data in Vue3 OptionAPI no setup expression', () => {
@@ -26,13 +31,17 @@ describe('Extractor', () => {
       path.join(srcPath, './Vue3OptionApiNoSetup.vue'),
       'utf8'
     );
-    const { template, script, style } = extractFromVue3SFC(file, false);
+    const { template, script, styles } = extractFromVue3SFC(file, false);
     const answer = fs.readFileSync(
       path.join(srcPath, './Vue3OptionApiNoSetup.answer.txt'),
       'utf8'
     );
-    const convertedScripts = [template, script, style];
-    expect(convertMultipleDataFormats(convertedScripts)).toBe(answer);
+    const outputs = outputVue3ExtractedContent(template, script, styles);
+    expect(convertMultipleDataFormats([
+      outputs.convertedTemplateContent,     
+      outputs.convertedScriptContent,
+      outputs.convertedStylesContent
+    ])).toBe(answer);
   });
 
   it('should extract the correct data in Vue3 OptionAPI setup expression', () => {
@@ -40,12 +49,16 @@ describe('Extractor', () => {
       path.join(srcPath, './Vue3OptionApiSetup.vue'),
       'utf8'
     );
-    const { template, script, style } = extractFromVue3SFC(file, true);
+    const { template, script, styles } = extractFromVue3SFC(file, true);
     const answer = fs.readFileSync(
       path.join(srcPath, './Vue3OptionApiSetup.answer.txt'),
       'utf8'
     );
-    const convertedScripts = [template, script, style];
-    expect(convertMultipleDataFormats(convertedScripts)).toBe(answer);
+    const outputs = outputVue3ExtractedContent(template, script, styles);
+    expect(convertMultipleDataFormats([
+      outputs.convertedTemplateContent,
+      outputs.convertedScriptContent,
+      outputs.convertedStylesContent  
+    ])).toBe(answer);
   });
 });

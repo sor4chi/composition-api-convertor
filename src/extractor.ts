@@ -6,9 +6,9 @@ export const extractFromVue2SFC = (source: string) => {
     vueTemplateCompiler.parseComponent(source);
 
   return {
-    template: template ? template.content : undefined,
-    script: script ? script.content : undefined,
-    style: styles.map((s) => s.content).join('\n'),
+    template: template ? template : undefined,
+    script: script ? script : undefined,
+    styles,
   };
 };
 
@@ -21,8 +21,8 @@ export const extractFromVue3SFC = (
   if (ParseErrors.length) throw new Error(ParseErrors.join('\n'));
 
   return {
-    template: sfc.template?.content,
-    script: isSetupExpression ? sfc.scriptSetup?.content : sfc.script?.content,
-    style: sfc.styles.map((s) => s.content).join('\n'),
+    template: sfc.template,
+    script: isSetupExpression ? sfc.scriptSetup : sfc.script,
+    styles: sfc.styles,
   };
 };
