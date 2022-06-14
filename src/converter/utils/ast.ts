@@ -1,9 +1,6 @@
-import { SourceFile, forEachChild, Node, SyntaxKind } from 'typescript';
+import { forEachChild, Node, SyntaxKind } from 'typescript';
 
-export const getNodeBySyntaxKind = (
-  sourceFile: SourceFile,
-  kind: SyntaxKind
-) => {
+export const getNodeBySyntaxKind = (node: Node, kind: SyntaxKind) => {
   const findNode = (node: Node): Node | undefined => {
     return forEachChild(node, (child) => {
       if (child.kind === kind) {
@@ -13,5 +10,5 @@ export const getNodeBySyntaxKind = (
       return findNode(child);
     });
   };
-  return findNode(sourceFile);
+  return findNode(node);
 };
