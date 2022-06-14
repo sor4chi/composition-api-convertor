@@ -1,9 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-import { extractFromVue2SFC, extractFromVue3SFC } from './../src/extractor';
-import { outputVue2ExtractedContent, outputVue3ExtractedContent } from './../src/output';
-import { convertMultipleDataFormats } from './utils';
+import { extractFromVue2SFC, extractFromVue3SFC } from '../extractor';
+import {
+  outputVue2ExtractedContent,
+  outputVue3ExtractedContent,
+} from '../output';
+import { convertMultipleDataFormats } from '../utils/format';
 
 const srcPath = path.join(__dirname, './src');
 
@@ -19,11 +22,13 @@ describe('Extractor', () => {
       'utf8'
     );
     const outputs = outputVue2ExtractedContent(template, script, styles);
-    expect(convertMultipleDataFormats([
-      outputs.convertedTemplateContent,
-      outputs.convertedScriptContent,   
-      outputs.convertedStylesContent  
-    ])).toBe(answer);
+    expect(
+      convertMultipleDataFormats([
+        outputs.convertedTemplateContent,
+        outputs.convertedScriptContent,
+        outputs.convertedStylesContent,
+      ])
+    ).toBe(answer);
   });
 
   it('should extract the correct data in Vue3 OptionAPI no setup expression', () => {
@@ -37,11 +42,13 @@ describe('Extractor', () => {
       'utf8'
     );
     const outputs = outputVue3ExtractedContent(template, script, styles);
-    expect(convertMultipleDataFormats([
-      outputs.convertedTemplateContent,     
-      outputs.convertedScriptContent,
-      outputs.convertedStylesContent
-    ])).toBe(answer);
+    expect(
+      convertMultipleDataFormats([
+        outputs.convertedTemplateContent,
+        outputs.convertedScriptContent,
+        outputs.convertedStylesContent,
+      ])
+    ).toBe(answer);
   });
 
   it('should extract the correct data in Vue3 OptionAPI setup expression', () => {
@@ -55,10 +62,12 @@ describe('Extractor', () => {
       'utf8'
     );
     const outputs = outputVue3ExtractedContent(template, script, styles);
-    expect(convertMultipleDataFormats([
-      outputs.convertedTemplateContent,
-      outputs.convertedScriptContent,
-      outputs.convertedStylesContent  
-    ])).toBe(answer);
+    expect(
+      convertMultipleDataFormats([
+        outputs.convertedTemplateContent,
+        outputs.convertedScriptContent,
+        outputs.convertedStylesContent,
+      ])
+    ).toBe(answer);
   });
 });

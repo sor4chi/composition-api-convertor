@@ -4,7 +4,7 @@
     "target": "ES2021",
     "lib": ["ES2021", "dom"],
     "sourceMap": true,
-    "rootDirs": ["src", "tests"],
+    "rootDir": "src",
     "outDir": "dist",
     "strict": true
   },

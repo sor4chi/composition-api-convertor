@@ -1,6 +1,6 @@
 import { SourceFile, SyntaxKind, isObjectLiteralExpression } from 'typescript';
 
-import { getNodeBySyntaxKind } from './utils/ast';
+import { getNodeBySyntaxKind } from '../utils/ast';
 
 /**
  * Get the Node exporting the Vue instance

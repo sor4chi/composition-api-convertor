@@ -6,8 +6,10 @@ import {
   isPropertyAssignment,
 } from 'typescript';
 
+import { getNodeBySyntaxKind } from '../utils/ast';
+import { formatCode } from '../utils/format';
+
 import { ConvertedExpression } from './types';
-import { getNodeBySyntaxKind } from './utils/ast';
 
 export const convertDataExpression = (
   node: Node,
@@ -37,7 +39,7 @@ export const convertDataExpression = (
       }
 
       return {
-        script: insertingScript,
+        script: formatCode(insertingScript),
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);
