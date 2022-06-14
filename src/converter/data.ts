@@ -20,6 +20,7 @@ export const convertDataExpression = (
   if (!(objNode && isObjectLiteralExpression(objNode))) {
     return [];
   }
+
   return objNode.properties
     .map((prop) => {
       if (!isPropertyAssignment(prop)) {
@@ -30,12 +31,10 @@ export const convertDataExpression = (
       const kind = prop.initializer.kind;
       let insertingScript = '';
 
-      switch (kind) {
-        case SyntaxKind.ObjectLiteralExpression:
-          insertingScript = `const ${name} = reactive(${text});`;
-          break;
-        default:
-          insertingScript = `const ${name} = ref(${text});`;
+      if (kind === SyntaxKind.ObjectLiteralExpression) {
+        insertingScript = `const ${name} = reactive(${text});`;
+      } else {
+        insertingScript = `const ${name} = ref(${text});`;
       }
 
       return {
