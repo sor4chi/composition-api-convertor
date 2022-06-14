@@ -1,6 +1,7 @@
 import { convertDataExpression } from '../../src/converter/data';
-import { ConvertedExpression } from '../../src/converter/types';
 import { convertTextToTypeScript } from '../../src/converter/utils/source';
+
+import type { ConvertedExpression } from '../../src/converter/types';
 
 describe('convertDataExpression', () => {
   it('should convert primitive data expression', () => {
