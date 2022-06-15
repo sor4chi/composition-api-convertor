@@ -15,7 +15,7 @@ describe('convertMethodsExpression', () => {
       )
       .filter(
         (item): item is NonNullable<typeof item> =>
-          item !== null && item !== undefined
+          item !== null
       );
 
     expect(

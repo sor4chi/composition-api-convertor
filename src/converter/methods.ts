@@ -15,14 +15,14 @@ import { ConvertedExpression } from './types';
 export const convertEachMethodExpression = (
   node: Node,
   sourceFile: SourceFile
-): ConvertedExpression | undefined => {
+): ConvertedExpression | null => {
   if (isMethodDeclaration(node)) {
     return convertMethodDeclaration(node, sourceFile);
   }
   if (isPropertyAssignment(node)) {
     return convertPropertyAssignment(node, sourceFile);
   }
-  return undefined;
+  return null;
 };
 
 const convertMethodDeclaration = (
@@ -51,8 +51,8 @@ const convertMethodDeclaration = (
 const convertPropertyAssignment = (
   node: PropertyAssignment,
   sourceFile: SourceFile
-): ConvertedExpression | undefined => {
-  if (!isFunctionExpression(node.initializer)) return;
+): ConvertedExpression | null => {
+  if (!isFunctionExpression(node.initializer)) return null;
   const name = node.name.getText(sourceFile);
   const functionNode = node.initializer;
   const async = functionNode.modifiers?.some(
