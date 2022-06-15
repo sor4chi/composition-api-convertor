@@ -7,7 +7,6 @@ import {
 } from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
-import { formatCode } from '../utils/format';
 
 import { ConvertedExpression } from './types';
 
@@ -41,7 +40,7 @@ export const convertDataExpression = (
       }
 
       return {
-        script: formatCode(insertingScript),
+        script: insertingScript,
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);

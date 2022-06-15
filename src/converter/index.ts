@@ -24,6 +24,19 @@ export const convertO2C = (script: SFCScriptBlock | SFCBlock) => {
     switch (prop.name?.getText()) {
       case 'data':
         dataProps.push(prop);
+        break;
+      case 'methods':
+        methodsProps.push(prop);
+        break;
+      case 'computed':
+        computedProps.push(prop);
+        break;
+      case 'watch':
+        watchProps.push(prop);
+        break;
+      case 'lifecycle':
+        lifecycleProps.push(prop);
+        break;
     }
   });
 };

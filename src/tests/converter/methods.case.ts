@@ -35,7 +35,7 @@ export default {
 export const methodExpressionSourceFile =
   convertTextToTypeScript(methodExpression);
 
-export const methodExpressionNode = [
+export const methodExpressionNodes = [
   ...getAllNodesBySyntaxKind(
     methodExpressionSourceFile,
     SyntaxKind.MethodDeclaration
