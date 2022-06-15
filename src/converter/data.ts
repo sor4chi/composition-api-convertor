@@ -2,8 +2,8 @@ import {
   Node,
   SourceFile,
   SyntaxKind,
-  isObjectLiteralExpression,
   isPropertyAssignment,
+  isObjectLiteralExpression,
 } from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
@@ -19,9 +19,7 @@ export const convertDataExpression = (
     SyntaxKind.ObjectLiteralExpression
   );
 
-  if (!(objNode && isObjectLiteralExpression(objNode))) {
-    return [];
-  }
+  if (!objNode || !isObjectLiteralExpression(objNode)) return [];
 
   return objNode.properties
     .map((prop) => {

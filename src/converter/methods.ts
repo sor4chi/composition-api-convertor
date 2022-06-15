@@ -4,11 +4,13 @@ import {
   SyntaxKind,
   isMethodDeclaration,
   isPropertyAssignment,
-  isObjectLiteralExpression,
   isFunctionExpression,
+  isObjectLiteralExpression,
   MethodDeclaration,
   PropertyAssignment,
 } from 'typescript';
+
+import { getFirstNodeBySyntaxKind } from '../utils/ast';
 
 import { ConvertedExpression } from './types';
 
@@ -80,12 +82,14 @@ export const convertMethodsExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression[] => {
-  if (!isPropertyAssignment(node)) return [];
-  if (!isObjectLiteralExpression(node.initializer)) return [];
-  return node.initializer.properties
-    .filter((prop) => isMethodDeclaration(prop))
-    .map((prop) =>
-      convertEachMethodExpression(prop as MethodDeclaration, sourceFile)
-    )
+  const methodNode = getFirstNodeBySyntaxKind(
+    node,
+    SyntaxKind.ObjectLiteralExpression
+  );
+
+  if (!methodNode || !isObjectLiteralExpression(methodNode)) return [];
+
+  return methodNode.properties
+    .map((prop) => convertEachMethodExpression(prop, sourceFile))
     .filter((item): item is NonNullable<typeof item> => item !== null);
 };

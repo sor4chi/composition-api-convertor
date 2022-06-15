@@ -1,7 +1,7 @@
-import { SyntaxKind } from 'typescript';
+import { SyntaxKind, PropertyAssignment } from 'typescript';
 
 import { ConvertedExpression } from '../../converter/types';
-import { getAllNodesBySyntaxKind } from '../../utils/ast';
+import { getFirstNodeBySyntaxKind } from '../../utils/ast';
 import { convertTextToTypeScript } from '../../utils/source';
 
 const methodExpression = `
@@ -35,16 +35,10 @@ export default {
 export const methodExpressionSourceFile =
   convertTextToTypeScript(methodExpression);
 
-export const methodExpressionNodes = [
-  ...getAllNodesBySyntaxKind(
-    methodExpressionSourceFile,
-    SyntaxKind.MethodDeclaration
-  ),
-  ...getAllNodesBySyntaxKind(
-    methodExpressionSourceFile,
-    SyntaxKind.PropertyAssignment
-  ),
-];
+export const methodExpressionNode = getFirstNodeBySyntaxKind(
+  methodExpressionSourceFile,
+  SyntaxKind.PropertyAssignment
+) as PropertyAssignment;
 
 export const collectConvertedMethodExpression: ConvertedExpression[] = [
   {

@@ -1,19 +1,18 @@
-import { convertEachMethodExpression } from '../../converter/methods';
+import { convertMethodsExpression } from '../../converter/methods';
 import { formatCode } from '../../utils/format';
 
 import {
   methodExpressionSourceFile,
-  methodExpressionNodes,
+  methodExpressionNode,
   collectConvertedMethodExpression,
 } from './methods.case';
 
 describe('convertMethodsExpression', () => {
   it('should convert methods expression', () => {
-    const convertedMethodExpressions = methodExpressionNodes
-      .map((node) =>
-        convertEachMethodExpression(node, methodExpressionSourceFile)
-      )
-      .filter((item): item is NonNullable<typeof item> => item !== null);
+    const convertedMethodExpressions = convertMethodsExpression(
+      methodExpressionNode,
+      methodExpressionSourceFile
+    );
 
     expect(
       convertedMethodExpressions.map((item) => formatCode(item.script))
