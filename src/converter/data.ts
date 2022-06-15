@@ -6,7 +6,7 @@ import {
   isPropertyAssignment,
 } from 'typescript';
 
-import { getNodeBySyntaxKind } from '../utils/ast';
+import { getFirstNodeBySyntaxKind } from '../utils/ast';
 import { formatCode } from '../utils/format';
 
 import { ConvertedExpression } from './types';
@@ -15,27 +15,29 @@ export const convertDataExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression[] => {
-  const objNode = getNodeBySyntaxKind(node, SyntaxKind.ObjectLiteralExpression);
+  const objNode = getFirstNodeBySyntaxKind(
+    node,
+    SyntaxKind.ObjectLiteralExpression
+  );
 
   if (!(objNode && isObjectLiteralExpression(objNode))) {
     return [];
   }
+
   return objNode.properties
     .map((prop) => {
       if (!isPropertyAssignment(prop)) {
-        return;
+        return null;
       }
       const name = prop.name.getText(sourceFile);
       const text = prop.initializer.getText(sourceFile);
       const kind = prop.initializer.kind;
       let insertingScript = '';
 
-      switch (kind) {
-        case SyntaxKind.ObjectLiteralExpression:
-          insertingScript = `const ${name} = reactive(${text});`;
-          break;
-        default:
-          insertingScript = `const ${name} = ref(${text});`;
+      if (kind === SyntaxKind.ObjectLiteralExpression) {
+        insertingScript = `const ${name} = reactive(${text});`;
+      } else {
+        insertingScript = `const ${name} = ref(${text});`;
       }
 
       return {
