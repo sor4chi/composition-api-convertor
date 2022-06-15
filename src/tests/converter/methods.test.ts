@@ -8,7 +8,7 @@ import {
 } from './methods.case';
 
 describe('convertMethodsExpression', () => {
-  it('should convert a method expression', () => {
+  it('should convert methods expression', () => {
     const convertedMethodExpressions = methodExpressionNode
       .map((node) =>
         convertEachMethodExpression(node, methodExpressionSourceFile)
