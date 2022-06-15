@@ -1,6 +1,6 @@
 import { forEachChild, Node, SyntaxKind } from 'typescript';
 
-export const getNodeBySyntaxKind = (node: Node, kind: SyntaxKind) => {
+export const getFirstNodeBySyntaxKind = (node: Node, kind: SyntaxKind) => {
   const findNode = (node: Node): Node | undefined => {
     return forEachChild(node, (child) => {
       if (child.kind === kind) {
@@ -11,4 +11,19 @@ export const getNodeBySyntaxKind = (node: Node, kind: SyntaxKind) => {
     });
   };
   return findNode(node);
+};
+
+export const getAllNodesBySyntaxKind = (node: Node, kind: SyntaxKind) => {
+  const nodes: Node[] = [];
+  const findNode = (node: Node): Node | undefined => {
+    return forEachChild(node, (child) => {
+      if (child.kind === kind) {
+        nodes.push(child);
+      }
+
+      return findNode(child);
+    });
+  };
+  findNode(node);
+  return nodes;
 };

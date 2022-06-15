@@ -6,7 +6,7 @@ import {
   isPropertyAssignment,
 } from 'typescript';
 
-import { getNodeBySyntaxKind } from '../utils/ast';
+import { getFirstNodeBySyntaxKind } from '../utils/ast';
 import { formatCode } from '../utils/format';
 
 import { ConvertedExpression } from './types';
@@ -15,7 +15,10 @@ export const convertDataExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression[] => {
-  const objNode = getNodeBySyntaxKind(node, SyntaxKind.ObjectLiteralExpression);
+  const objNode = getFirstNodeBySyntaxKind(
+    node,
+    SyntaxKind.ObjectLiteralExpression
+  );
 
   if (!(objNode && isObjectLiteralExpression(objNode))) {
     return [];
