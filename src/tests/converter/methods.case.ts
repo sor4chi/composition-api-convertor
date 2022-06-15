@@ -1,4 +1,4 @@
-import { SyntaxKind, MethodDeclaration } from 'typescript';
+import { SyntaxKind } from 'typescript';
 
 import { ConvertedExpression } from '../../converter/types';
 import { getAllNodesBySyntaxKind } from '../../utils/ast';
@@ -10,19 +10,22 @@ export default {
     foo() {
       return 'bar';
     },
-    bar: function() {
-      return 'foo';
-    },
     async hoge() {
       return 'fuga';
-    },
-    fuga: async function() {
-      return 'hoge';
     },
     piyo(hoge, fuga) {
       return hoge + fuga;
     },
     poyo(hoge: number, fuga: number): number {
+      return hoge + fuga;
+    },
+    bar: function() {
+      return 'foo';
+    },
+    fuga: async function() {
+      return 'hoge';
+    },
+    pao: function(hoge: number, fuga: number): number {
       return hoge + fuga;
     }
   },
@@ -32,10 +35,16 @@ export default {
 export const methodExpressionSourceFile =
   convertTextToTypeScript(methodExpression);
 
-export const methodExpressionNode = getAllNodesBySyntaxKind(
-  methodExpressionSourceFile,
-  SyntaxKind.MethodDeclaration
-) as MethodDeclaration[];
+export const methodExpressionNode = [
+  ...getAllNodesBySyntaxKind(
+    methodExpressionSourceFile,
+    SyntaxKind.MethodDeclaration
+  ),
+  ...getAllNodesBySyntaxKind(
+    methodExpressionSourceFile,
+    SyntaxKind.PropertyAssignment
+  ),
+];
 
 export const collectConvertedMethodExpression: ConvertedExpression[] = [
   {
@@ -47,22 +56,8 @@ export const collectConvertedMethodExpression: ConvertedExpression[] = [
   },
   {
     script: `
-  const bar = () => {
-    return 'foo';
-  }
-  `,
-  },
-  {
-    script: `
   const hoge = async () => {
     return 'fuga';
-  }
-  `,
-  },
-  {
-    script: `
-  const fuga = async () => {
-    return 'hoge';
   }
   `,
   },
@@ -76,6 +71,27 @@ export const collectConvertedMethodExpression: ConvertedExpression[] = [
   {
     script: `
   const poyo = (hoge: number, fuga: number): number => {
+    return hoge + fuga;
+  }
+  `,
+  },
+  {
+    script: `
+  const bar = () => {
+    return 'foo';
+  }
+  `,
+  },
+  {
+    script: `
+  const fuga = async () => {
+    return 'hoge';
+  }
+  `,
+  },
+  {
+    script: `
+  const pao = (hoge: number, fuga: number): number => {
     return hoge + fuga;
   }
   `,
