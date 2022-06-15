@@ -27,7 +27,7 @@ export const convertDataExpression = (
   return objNode.properties
     .map((prop) => {
       if (!isPropertyAssignment(prop)) {
-        return;
+        return null;
       }
       const name = prop.name.getText(sourceFile);
       const text = prop.initializer.getText(sourceFile);
