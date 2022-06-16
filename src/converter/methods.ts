@@ -4,7 +4,6 @@ import {
   SyntaxKind,
   isMethodDeclaration,
   isPropertyAssignment,
-  isFunctionExpression,
   isObjectLiteralExpression,
   MethodDeclaration,
   PropertyAssignment,
@@ -12,6 +11,10 @@ import {
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
 
+import {
+  parseMethodDeclarationFunction,
+  parsePropertyAssignmentFunction,
+} from './function';
 import { ConvertedExpression } from './types';
 
 export const convertEachMethodExpression = (
@@ -31,18 +34,9 @@ const convertMethodDeclaration = (
   node: MethodDeclaration,
   sourceFile: SourceFile
 ): ConvertedExpression => {
-  const async = node.modifiers?.some(
-    (mod) => mod.kind === SyntaxKind.AsyncKeyword
-  )
-    ? 'async'
-    : '';
-
-  const name = node.name.getText(sourceFile);
-  const type = node.type ? `:${node.type.getText(sourceFile)}` : '';
-  const body = node.body?.getText(sourceFile) || '{}';
-  const parameters = node.parameters
-    .map((param) => param.getText(sourceFile))
-    .join(',');
+  const methodsProperty = parseMethodDeclarationFunction(node, sourceFile);
+  if (!methodsProperty) return { script: '' };
+  const { async, name, parameters, type, body } = methodsProperty;
   const innerFunction = `${async}(${parameters})${type} =>${body}`;
 
   return {
@@ -54,24 +48,10 @@ const convertPropertyAssignment = (
   node: PropertyAssignment,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
-  if (!isFunctionExpression(node.initializer)) return null;
-  const name = node.name.getText(sourceFile);
-  const functionNode = node.initializer;
-  const async = functionNode.modifiers?.some(
-    (mod) => mod.kind === SyntaxKind.AsyncKeyword
-  )
-    ? 'async'
-    : '';
+  const methodsProperty = parsePropertyAssignmentFunction(node, sourceFile);
+  if (!methodsProperty) return null;
+  const { async, name, parameters, type, body } = methodsProperty;
 
-  const parameters = functionNode.parameters
-    .map((param) => param.getText(sourceFile))
-    .join(',');
-
-  const type = functionNode.type
-    ? `:${functionNode.type.getText(sourceFile)}`
-    : '';
-
-  const body = functionNode.body?.getText(sourceFile) || '{}';
   const innerFunction = `${async}(${parameters})${type} =>${body}`;
   return {
     script: `const ${name} = ${innerFunction}`,
