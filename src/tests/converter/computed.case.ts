@@ -4,7 +4,7 @@ import { ConvertedExpression } from '../../converter/types';
 import { getFirstNodeBySyntaxKind } from '../../utils/ast';
 import { convertTextToTypeScript } from '../../utils/source';
 
-const getterOnlyComputedExpression = `
+const computedExpression = `
 export default {
   computed: {
     foo() {
@@ -39,16 +39,16 @@ export default {
 }
 `;
 
-export const getterOnlyComputedExpressionSourceFile = convertTextToTypeScript(
-  getterOnlyComputedExpression
+export const computedExpressionSourceFile = convertTextToTypeScript(
+  computedExpression
 );
 
-export const getterOnlyComputedExpressionNode = getFirstNodeBySyntaxKind(
-  getterOnlyComputedExpressionSourceFile,
+export const computedExpressionNode = getFirstNodeBySyntaxKind(
+  computedExpressionSourceFile,
   SyntaxKind.PropertyAssignment
 ) as PropertyAssignment;
 
-export const collectConvertedGetterOnlyComputedExpression: ConvertedExpression[] =
+export const collectConvertedComputedExpression: ConvertedExpression[] =
   [
     {
       script: ` 
