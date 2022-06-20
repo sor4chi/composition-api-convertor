@@ -1,11 +1,10 @@
 import {
   Node,
   SourceFile,
-  SyntaxKind,
-  PropertyAssignment,
   isMethodDeclaration,
   isPropertyAssignment,
   isObjectLiteralExpression,
+  SyntaxKind,
 } from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
@@ -16,7 +15,7 @@ import {
 } from './function';
 import { ConvertedExpression, ParsedFunction } from './types';
 
-export const convertEachMethodExpression = (
+export const convertEachWatchExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
@@ -28,26 +27,24 @@ export const convertEachMethodExpression = (
     methodsProperty = parsePropertyAssignmentFunction(node, sourceFile);
   }
   if (!methodsProperty) return null;
-  const { async, name, parameters, type, body } = methodsProperty;
-  const methodType = type ? `:${type}` : '';
-  const innerFunction = `${async}(${parameters})${methodType} =>${body}`;
+  const { async, name, parameters, body } = methodsProperty;
   return {
-    script: `const ${name} = ${innerFunction}`,
+    script: `watch(${name}, ${async}(${parameters}) => ${body})`,
   };
 };
 
-export const convertMethodsExpression = (
+export const convertWatchExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression[] => {
-  const methodNode = getFirstNodeBySyntaxKind(
+  const watchNode = getFirstNodeBySyntaxKind(
     node,
     SyntaxKind.ObjectLiteralExpression
   );
 
-  if (!methodNode || !isObjectLiteralExpression(methodNode)) return [];
+  if (!watchNode || !isObjectLiteralExpression(watchNode)) return [];
 
-  return methodNode.properties
-    .map((prop) => convertEachMethodExpression(prop, sourceFile))
+  return watchNode.properties
+    .map((prop) => convertEachWatchExpression(prop, sourceFile))
     .filter((item): item is NonNullable<typeof item> => item !== null);
 };
