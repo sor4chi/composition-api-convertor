@@ -40,7 +40,7 @@ export const parsePropertyAssignmentFunction = (
 export const parseMethodDeclarationFunction = (
   node: MethodDeclaration,
   sourceFile: SourceFile
-): ParsedFunction | null => {
+): ParsedFunction => {
   const async = node.modifiers?.some(
     (mod) => mod.kind === SyntaxKind.AsyncKeyword
   )
