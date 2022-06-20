@@ -9,3 +9,4 @@ export interface ParsedFunction {
   parameters: string;
   body: string;
 }
+
