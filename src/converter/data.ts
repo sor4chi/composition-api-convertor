@@ -2,12 +2,11 @@ import {
   Node,
   SourceFile,
   SyntaxKind,
-  isObjectLiteralExpression,
   isPropertyAssignment,
+  isObjectLiteralExpression,
 } from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
-import { formatCode } from '../utils/format';
 
 import { ConvertedExpression } from './types';
 
@@ -20,9 +19,7 @@ export const convertDataExpression = (
     SyntaxKind.ObjectLiteralExpression
   );
 
-  if (!(objNode && isObjectLiteralExpression(objNode))) {
-    return [];
-  }
+  if (!objNode || !isObjectLiteralExpression(objNode)) return [];
 
   return objNode.properties
     .map((prop) => {
@@ -41,7 +38,7 @@ export const convertDataExpression = (
       }
 
       return {
-        script: formatCode(insertingScript),
+        script: insertingScript,
       };
     })
     .filter((item): item is NonNullable<typeof item> => item !== null);

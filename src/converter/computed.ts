@@ -15,7 +15,7 @@ import {
 } from './function';
 import { ConvertedExpression, ParsedFunction } from './types';
 
-export const convertEachMethodExpression = (
+export const convertEachComputedExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
@@ -27,15 +27,17 @@ export const convertEachMethodExpression = (
     methodsProperty = parsePropertyAssignmentFunction(node, sourceFile);
   }
   if (!methodsProperty) return null;
+
   const { async, name, parameters, type, body } = methodsProperty;
-  const methodType = type ? `:${type}` : '';
-  const innerFunction = `${async}(${parameters})${methodType} =>${body}`;
+  const innerFunction = `${async}(${parameters}) => ${body}`;
+  const computedType = type ? `<${type}>` : '';
+
   return {
-    script: `const ${name} = ${innerFunction}`,
+    script: `const ${name} = computed${computedType}(${innerFunction});`,
   };
 };
 
-export const convertMethodsExpression = (
+export const convertComputedExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression[] => {
@@ -47,6 +49,6 @@ export const convertMethodsExpression = (
   if (!methodNode || !isObjectLiteralExpression(methodNode)) return [];
 
   return methodNode.properties
-    .map((prop) => convertEachMethodExpression(prop, sourceFile))
+    .map((prop) => convertEachComputedExpression(prop, sourceFile))
     .filter((item): item is NonNullable<typeof item> => item !== null);
 };

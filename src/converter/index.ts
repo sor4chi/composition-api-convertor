@@ -3,6 +3,7 @@ import { SFCBlock } from 'vue-template-compiler';
 
 import { convertTextToTypeScript } from '../utils/source';
 
+import { convertDataExpression } from './data';
 import { getExportObjNode } from './instance';
 
 export const convertO2C = (script: SFCScriptBlock | SFCBlock) => {
@@ -23,7 +24,20 @@ export const convertO2C = (script: SFCScriptBlock | SFCBlock) => {
   exportObjNode.properties.forEach((prop) => {
     switch (prop.name?.getText()) {
       case 'data':
-        dataProps.push(prop);
+        dataProps.push(...convertDataExpression(prop, convertingSourceFile));
+        break;
+      case 'methods':
+        methodsProps.push(prop);
+        break;
+      case 'computed':
+        computedProps.push(prop);
+        break;
+      case 'watch':
+        watchProps.push(prop);
+        break;
+      case 'lifecycle':
+        lifecycleProps.push(prop);
+        break;
     }
   });
 };
