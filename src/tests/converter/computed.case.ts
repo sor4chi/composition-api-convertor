@@ -12,13 +12,29 @@ export default {
     },
     aaa: function() { 
       return 'aaa';
-    }
+    },
     withType(aaa: string): string {
       return aaa;
-    }
+    },
     withType2: function(aaa: string): string {
       return aaa;
-    }
+    },
+    withGetter: {
+      get() {
+        return aaa;
+      },
+      set: function(value: string) {
+        this.aaa = value;
+      }
+    },
+    withGetter2: {
+      get: function(aaa: string) {
+        return aaa;
+      },
+      set(value: string) {
+        this.aaa = value;
+      }
+    },
   }
 }
 `;
@@ -59,6 +75,30 @@ export const collectConvertedGetterOnlyComputedExpression: ConvertedExpression[]
       script: `
     const withType2 = computed<string>((aaa: string)=> {
       return aaa;
+    })
+    `,
+    },
+    {
+      script: `
+    const withGetter = computed({
+      get() {
+        return aaa;
+      },
+      set: function (value: string) {
+        this.aaa = value;
+      }
+    })
+    `,
+    },
+    {
+      script: `
+    const withGetter2 = computed({
+      get: function (aaa: string) {
+        return aaa;
+      },
+      set(value: string) {
+        this.aaa = value;
+      }
     })
     `,
     },

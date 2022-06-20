@@ -2,6 +2,7 @@ import {
   Node,
   SourceFile,
   SyntaxKind,
+  PropertyAssignment,
   isMethodDeclaration,
   isPropertyAssignment,
   isObjectLiteralExpression,

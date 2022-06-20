@@ -2,6 +2,7 @@ import {
   Node,
   SourceFile,
   SyntaxKind,
+  PropertyAssignment,
   isMethodDeclaration,
   isPropertyAssignment,
   isObjectLiteralExpression,
@@ -19,21 +20,54 @@ export const convertEachComputedExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
+  let isWithGetterSetter = false;
   let methodsProperty: ParsedFunction | null = null;
   if (isMethodDeclaration(node)) {
     methodsProperty = parseMethodDeclarationFunction(node, sourceFile);
   }
   if (isPropertyAssignment(node)) {
     methodsProperty = parsePropertyAssignmentFunction(node, sourceFile);
+    if (!methodsProperty) {
+      methodsProperty = parseGetterSetterFunction(node, sourceFile);
+      if (methodsProperty) isWithGetterSetter = true;
+    }
   }
   if (!methodsProperty) return null;
 
   const { async, name, parameters, type, body } = methodsProperty;
-  const innerFunction = `${async}(${parameters}) => ${body}`;
+  let innerFunction = '';
+  if (isWithGetterSetter) {
+    innerFunction = `{${body}}`;
+  } else {
+    innerFunction = `${async}(${parameters}) => ${body}`;
+  }
   const computedType = type ? `<${type}>` : '';
 
   return {
     script: `const ${name} = computed${computedType}(${innerFunction});`,
+  };
+};
+
+const parseGetterSetterFunction = (
+  node: PropertyAssignment,
+  sourceFile: SourceFile
+): ParsedFunction | null => {
+  const name = node.name.getText(sourceFile);
+  const objectLiteral = node.initializer;
+  if (!isObjectLiteralExpression(objectLiteral)) return null;
+  const get = objectLiteral.properties.find(
+    (prop) => prop.name?.getText(sourceFile) === 'get'
+  );
+  const set = objectLiteral.properties.find(
+    (prop) => prop.name?.getText(sourceFile) === 'set'
+  );
+  if (!get || !set) return null;
+  return {
+    name,
+    async: '',
+    type: '',
+    parameters: '',
+    body: `${get.getText(sourceFile)},${set.getText(sourceFile)}`,
   };
 };
 
