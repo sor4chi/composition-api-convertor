@@ -1,23 +1,24 @@
-import { convertWatchExpression } from '../../converter/watch';
+import { convertLifecycleExpression } from '../../converter/lifecycle';
 import { formatCode } from '../../utils/format';
 
 import {
-  watchExpressionSourceFile,
-  watchExpressionNode,
-  collectConvertedWatchExpression,
-} from './watch.case';
+  lifecycleExpressionSourceFile,
+  lifecycleExpressionNodes,
+  collectConvertedLifecycleExpression,
+} from './Lifecycle.case';
 
-describe('convertWatchExpression', () => {
-  it('should convert watch expression', () => {
-    const convertedWatchExpressions = convertWatchExpression(
-      watchExpressionNode,
-      watchExpressionSourceFile
-    );
+describe('convertLifecycleExpression', () => {
+  it('should convert Lifecycle expression', () => {
+    const convertedLifecycleExpressions = lifecycleExpressionNodes
+      .map((node) =>
+        convertLifecycleExpression(node, lifecycleExpressionSourceFile)
+      )
+      .filter((item): item is NonNullable<typeof item> => item !== null);
 
     expect(
-      convertedWatchExpressions.map((item) => formatCode(item.script))
+      convertedLifecycleExpressions.map((item) => formatCode(item.script))
     ).toEqual(
-      collectConvertedWatchExpression.map((item) => formatCode(item.script))
+      collectConvertedLifecycleExpression.map((item) => formatCode(item.script))
     );
   });
 });
