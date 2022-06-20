@@ -24,7 +24,7 @@ export const parsePropertyAssignmentFunction = (
     .map((param) => param.getText(sourceFile))
     .join(',');
   const type = functionNode.type
-    ? `:${functionNode.type.getText(sourceFile)}`
+    ? `${functionNode.type.getText(sourceFile)}`
     : '';
   const body = functionNode.body?.getText(sourceFile) || '{}';
 
@@ -47,7 +47,7 @@ export const parseMethodDeclarationFunction = (
     ? 'async'
     : '';
   const name = node.name.getText(sourceFile);
-  const type = node.type ? `:${node.type.getText(sourceFile)}` : '';
+  const type = node.type ? `${node.type.getText(sourceFile)}` : '';
   const body = node.body?.getText(sourceFile) || '{}';
   const parameters = node.parameters
     .map((param) => param.getText(sourceFile))

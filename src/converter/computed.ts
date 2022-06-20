@@ -3,28 +3,37 @@ import {
   SourceFile,
   SyntaxKind,
   isMethodDeclaration,
+  isPropertyAssignment,
   isObjectLiteralExpression,
 } from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
 
-import { ConvertedExpression } from './types';
+import {
+  parseMethodDeclarationFunction,
+  parsePropertyAssignmentFunction,
+} from './function';
+import { ConvertedExpression, ParsedFunction } from './types';
 
 export const convertEachComputedExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
-  if (!isMethodDeclaration(node)) return null;
-  const name = node.name.getText(sourceFile);
-  const type = node.type ? `:${node.type.getText(sourceFile)}` : '';
-  const body = node.body?.getText(sourceFile) || '{}';
-  const parameters = node.parameters
-    .map((param) => param.getText(sourceFile))
-    .join(',');
-  const innerFunction = `() => ${body}`;
+  let methodsProperty: ParsedFunction | null = null;
+  if (isMethodDeclaration(node)) {
+    methodsProperty = parseMethodDeclarationFunction(node, sourceFile);
+  }
+  if (isPropertyAssignment(node)) {
+    methodsProperty = parsePropertyAssignmentFunction(node, sourceFile);
+  }
+  if (!methodsProperty) return null;
+
+  const { async, name, parameters, type, body } = methodsProperty;
+  const innerFunction = `${async}(${parameters}) => ${body}`;
+  const computedType = type ? `<${type}>` : '';
 
   return {
-    script: `const ${name} = computed(${innerFunction});`,
+    script: `const ${name} = computed${computedType}(${innerFunction});`,
   };
 };
 

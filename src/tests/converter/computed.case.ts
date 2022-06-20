@@ -10,9 +10,15 @@ export default {
     foo() {
       return 'bar';
     },
-    aaa() { 
+    aaa: function() { 
       return 'aaa';
-    } 
+    }
+    withType(aaa: string): string {
+      return aaa;
+    }
+    withType2: function(aaa: string): string {
+      return aaa;
+    }
   }
 }
 `;
@@ -39,6 +45,20 @@ export const collectConvertedGetterOnlyComputedExpression: ConvertedExpression[]
       script: `
     const aaa = computed(() => { 
       return 'aaa';
+    })
+    `,
+    },
+    {
+      script: `
+    const withType = computed<string>((aaa: string)=> {
+      return aaa;
+    })
+    `,
+    },
+    {
+      script: `
+    const withType2 = computed<string>((aaa: string)=> {
+      return aaa;
     })
     `,
     },

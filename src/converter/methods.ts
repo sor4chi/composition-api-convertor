@@ -28,7 +28,8 @@ export const convertEachMethodExpression = (
   }
   if (!methodsProperty) return null;
   const { async, name, parameters, type, body } = methodsProperty;
-  const innerFunction = `${async}(${parameters})${type} =>${body}`;
+  const methodType = type ? `:${type}` : '';
+  const innerFunction = `${async}(${parameters})${methodType} =>${body}`;
   return {
     script: `const ${name} = ${innerFunction}`,
   };
