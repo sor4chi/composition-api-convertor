@@ -5,7 +5,7 @@ import {
   lifecycleExpressionSourceFile,
   lifecycleExpressionNodes,
   collectConvertedLifecycleExpression,
-} from './Lifecycle.case';
+} from './lifecycle.case';
 
 describe('convertLifecycleExpression', () => {
   it('should convert Lifecycle expression', () => {
