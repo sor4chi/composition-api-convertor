@@ -1,19 +1,33 @@
-import { Node, SourceFile, isMethodDeclaration } from 'typescript';
+import {
+  Node,
+  SourceFile,
+  isMethodDeclaration,
+  isPropertyAssignment,
+} from 'typescript';
 
 import { LIFECYCLE_CHOICES } from './constants';
-import { parseMethodDeclarationFunction } from './function';
-import { ConvertedExpression } from './types';
+import {
+  parseMethodDeclarationFunction,
+  parsePropertyAssignmentFunction,
+} from './function';
+import { ConvertedExpression, ParsedFunction } from './types';
 
 export const convertLifecycleExpression = (
   node: Node,
   sourceFile: SourceFile
 ): ConvertedExpression | null => {
-  if (!node || !isMethodDeclaration(node)) return null;
+  let lifecycleProperty: ParsedFunction | null = null;
 
-  const { async, name, body } = parseMethodDeclarationFunction(
-    node,
-    sourceFile
-  );
+  if (isMethodDeclaration(node)) {
+    lifecycleProperty = parseMethodDeclarationFunction(node, sourceFile);
+  }
+  if (isPropertyAssignment(node)) {
+    lifecycleProperty = parsePropertyAssignmentFunction(node, sourceFile);
+  }
+
+  if (!lifecycleProperty) return null;
+
+  const { async, name, body } = lifecycleProperty;
 
   const lifecycleKind = LIFECYCLE_CHOICES.find(
     (choice) => choice.name === name

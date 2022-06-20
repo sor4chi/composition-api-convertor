@@ -1,4 +1,4 @@
-import { SyntaxKind, MethodDeclaration } from 'typescript';
+import { SyntaxKind, MethodDeclaration, PropertyAssignment } from 'typescript';
 
 import { ConvertedExpression } from '../../converter/types';
 import { getAllNodesBySyntaxKind } from '../../utils/ast';
@@ -15,19 +15,31 @@ export default {
   created () {
     console.log('created');
   },
-  beforeCreate () {
+  async beforeCreate () {
     console.log('beforeCreate');
   },
+  updated: function () {
+    console.log('updated');
+  },
+  beforeUpdate: async function () {
+    console.log('beforeUpdate');
+  }
 }
 `;
 
 export const lifecycleExpressionSourceFile =
   convertTextToTypeScript(lifecycleExpression);
 
-export const lifecycleExpressionNodes = getAllNodesBySyntaxKind(
-  lifecycleExpressionSourceFile,
-  SyntaxKind.MethodDeclaration
-) as MethodDeclaration[]
+export const lifecycleExpressionNodes = [
+  ...(getAllNodesBySyntaxKind(
+    lifecycleExpressionSourceFile,
+    SyntaxKind.MethodDeclaration
+  ) as MethodDeclaration[]),
+  ...(getAllNodesBySyntaxKind(
+    lifecycleExpressionSourceFile,
+    SyntaxKind.PropertyAssignment
+  ) as PropertyAssignment[]),
+];
 
 export const collectConvertedLifecycleExpression: ConvertedExpression[] = [
   {
@@ -53,8 +65,22 @@ export const collectConvertedLifecycleExpression: ConvertedExpression[] = [
   },
   {
     script: `
-    (() => {
+    (async () => {
       console.log('beforeCreate');
+    });
+    `,
+  },
+  {
+    script: `
+    onUpdated(() => {
+      console.log('updated');
+    });
+    `,
+  },
+  {
+    script: `
+    onBeforeUpdate(async () => {
+      console.log('beforeUpdate');
     });
     `,
   },
