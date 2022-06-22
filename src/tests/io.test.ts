@@ -1,73 +1,54 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import { readFileSync, writeFileSync } from 'fs';
+import { resolve } from 'path';
 
-import { extractFromVue2SFC, extractFromVue3SFC } from '../extractor';
+import { extractFromVue2SFC } from './../extractor';
+import { outputVue2ExtractedContent } from './../output';
 import {
-  outputVue2ExtractedContent,
-  outputVue3ExtractedContent,
-} from '../output';
-import { convertMultipleDataFormats } from '../utils/format';
+  wrapTemplateTag,
+  wrapScriptTag,
+  wrapStyleTag,
+  formatVue,
+} from './../utils/format';
 
-const srcPath = path.join(__dirname, './src');
+describe('successfully convert Vue2 OptionAPI to CompositionAPI', () => {
+  it('should return collect converted CompositionAPI', () => {
+    const testFilePath = resolve(__dirname, './src/Test.vue');
+    const testAnswerFilePath = resolve(__dirname, './src/Test.ans.vue');
+    const testFileContent = readFileSync(testFilePath, 'utf-8');
+    const testAnswerFileContent = readFileSync(testAnswerFilePath, 'utf-8');
+    const { template, script, styles } = extractFromVue2SFC(testFileContent);
+    const convertedContents = outputVue2ExtractedContent(
+      template,
+      script,
+      styles
+    );
 
-describe('Extractor', () => {
-  it('should extract the correct data in Vue2 OptionAPI', () => {
-    const file = fs.readFileSync(
-      path.join(srcPath, './Vue2OptionApi.vue'),
-      'utf8'
-    );
-    const { template, script, styles } = extractFromVue2SFC(file);
-    const answer = fs.readFileSync(
-      path.join(srcPath, './Vue2OptionApi.answer.txt'),
-      'utf8'
-    );
-    const outputs = outputVue2ExtractedContent(template, script, styles);
-    expect(
-      convertMultipleDataFormats([
-        outputs.convertedTemplateContent,
-        outputs.convertedScriptContent,
-        outputs.convertedStylesContent,
-      ])
-    ).toBe(answer);
-  });
+    if (!convertedContents) return;
 
-  it('should extract the correct data in Vue3 OptionAPI no setup expression', () => {
-    const file = fs.readFileSync(
-      path.join(srcPath, './Vue3OptionApiNoSetup.vue'),
-      'utf8'
-    );
-    const { template, script, styles } = extractFromVue3SFC(file, false);
-    const answer = fs.readFileSync(
-      path.join(srcPath, './Vue3OptionApiNoSetup.answer.txt'),
-      'utf8'
-    );
-    const outputs = outputVue3ExtractedContent(template, script, styles);
-    expect(
-      convertMultipleDataFormats([
-        outputs.convertedTemplateContent,
-        outputs.convertedScriptContent,
-        outputs.convertedStylesContent,
-      ])
-    ).toBe(answer);
-  });
+    const convertedSFCContents: string[] = [];
 
-  it('should extract the correct data in Vue3 OptionAPI setup expression', () => {
-    const file = fs.readFileSync(
-      path.join(srcPath, './Vue3OptionApiSetup.vue'),
-      'utf8'
+    if (template) {
+      convertedSFCContents.push(
+        wrapTemplateTag(convertedContents.convertedTemplateContent, template)
+      );
+    }
+
+    if (script) {
+      convertedSFCContents.push(
+        wrapScriptTag(convertedContents.convertedScriptContent, script)
+      );
+    }
+
+    if (styles) {
+      convertedSFCContents.push(
+        wrapStyleTag(convertedContents.convertedStylesContent, styles)
+      );
+    }
+
+    writeFileSync('./output.vue', convertedSFCContents.join('\n'));
+
+    expect(formatVue(convertedSFCContents.join('\n'))).toEqual(
+      formatVue(testAnswerFileContent)
     );
-    const { template, script, styles } = extractFromVue3SFC(file, true);
-    const answer = fs.readFileSync(
-      path.join(srcPath, './Vue3OptionApiSetup.answer.txt'),
-      'utf8'
-    );
-    const outputs = outputVue3ExtractedContent(template, script, styles);
-    expect(
-      convertMultipleDataFormats([
-        outputs.convertedTemplateContent,
-        outputs.convertedScriptContent,
-        outputs.convertedStylesContent,
-      ])
-    ).toBe(answer);
   });
 });

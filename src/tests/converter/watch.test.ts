@@ -1,5 +1,5 @@
 import { convertWatchExpression } from '../../converter/watch';
-import { formatCode } from '../../utils/format';
+import { formatScript } from '../../utils/format';
 
 import {
   watchExpressionSourceFile,
@@ -15,9 +15,9 @@ describe('convertWatchExpression', () => {
     );
 
     expect(
-      convertedWatchExpressions.map((item) => formatCode(item.script))
+      convertedWatchExpressions.map((item) => formatScript(item.script))
     ).toEqual(
-      collectConvertedWatchExpression.map((item) => formatCode(item.script))
+      collectConvertedWatchExpression.map((item) => formatScript(item.script))
     );
   });
 });

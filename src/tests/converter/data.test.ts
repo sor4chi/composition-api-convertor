@@ -7,7 +7,7 @@ import {
   objectDataExpressionNode,
   collectConvertedObjectDataExpression,
 } from '../../tests/converter/data.case';
-import { formatCode } from '../../utils/format';
+import { formatScript } from '../../utils/format';
 
 describe('convertDataExpression', () => {
   it('should convert primitive data expression', () => {
@@ -18,11 +18,11 @@ describe('convertDataExpression', () => {
 
     expect(
       convertedDataExpression.map((item) => ({
-        script: formatCode(item.script),
+        script: formatScript(item.script),
       }))
     ).toEqual(
       collectConvertedPrimitiveDataExpression.map((item) => ({
-        script: formatCode(item.script),
+        script: formatScript(item.script),
       }))
     );
   });
@@ -35,11 +35,11 @@ describe('convertDataExpression', () => {
 
     expect(
       convertedDataExpression.map((item) => ({
-        script: formatCode(item.script),
+        script: formatScript(item.script),
       }))
     ).toEqual(
       collectConvertedObjectDataExpression.map((item) => ({
-        script: formatCode(item.script),
+        script: formatScript(item.script),
       }))
     );
   });

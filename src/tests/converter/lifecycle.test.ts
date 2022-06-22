@@ -1,5 +1,5 @@
 import { convertLifecycleExpression } from '../../converter/lifecycle';
-import { formatCode } from '../../utils/format';
+import { formatScript } from '../../utils/format';
 
 import {
   lifecycleExpressionSourceFile,
@@ -16,9 +16,11 @@ describe('convertLifecycleExpression', () => {
       .filter((item): item is NonNullable<typeof item> => item !== null);
 
     expect(
-      convertedLifecycleExpressions.map((item) => formatCode(item.script))
+      convertedLifecycleExpressions.map((item) => formatScript(item.script))
     ).toEqual(
-      collectConvertedLifecycleExpression.map((item) => formatCode(item.script))
+      collectConvertedLifecycleExpression.map((item) =>
+        formatScript(item.script)
+      )
     );
   });
 });

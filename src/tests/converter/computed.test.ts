@@ -1,5 +1,5 @@
 import { convertComputedExpression } from '../../converter/computed';
-import { formatCode } from '../../utils/format';
+import { formatScript } from '../../utils/format';
 
 import {
   computedExpressionNode,
@@ -14,8 +14,12 @@ describe('convertComputedExpression', () => {
       computedExpressionSourceFile
     );
 
-    expect(convertedExpression.map((item) => formatCode(item.script))).toEqual(
-      collectConvertedComputedExpression.map((item) => formatCode(item.script))
+    expect(
+      convertedExpression.map((item) => formatScript(item.script))
+    ).toEqual(
+      collectConvertedComputedExpression.map((item) =>
+        formatScript(item.script)
+      )
     );
   });
 });

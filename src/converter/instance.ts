@@ -1,28 +1,28 @@
-import { SourceFile, SyntaxKind, isObjectLiteralExpression } from 'typescript';
+import {
+  SourceFile,
+  SyntaxKind,
+  isExportAssignment,
+  isObjectLiteralExpression,
+} from 'typescript';
 
 import { getFirstNodeBySyntaxKind } from '../utils/ast';
 
-/**
- * Get the Node exporting the Vue instance
- */
+/** Get the Node exporting the Vue instance */
 export const getExportObjNode = (sourceFile: SourceFile) => {
   const exportAssignmentNode = getFirstNodeBySyntaxKind(
     sourceFile,
-    SyntaxKind.ExportDeclaration
+    SyntaxKind.ExportAssignment
   );
 
-  const exportObjectNode = getFirstNodeBySyntaxKind(
-    sourceFile,
+  if (!exportAssignmentNode || !isExportAssignment(exportAssignmentNode))
+    return null;
+
+  const exportObjNode = getFirstNodeBySyntaxKind(
+    exportAssignmentNode,
     SyntaxKind.ObjectLiteralExpression
   );
 
-  if (
-    !exportAssignmentNode ||
-    !exportObjectNode ||
-    !isObjectLiteralExpression(exportObjectNode)
-  ) {
-    return null;
-  }
+  if (!exportObjNode || !isObjectLiteralExpression(exportObjNode)) return null;
 
-  return exportObjectNode;
+  return exportObjNode;
 };

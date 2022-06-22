@@ -1,5 +1,5 @@
 import { convertMethodsExpression } from '../../converter/methods';
-import { formatCode } from '../../utils/format';
+import { formatScript } from '../../utils/format';
 
 import {
   methodExpressionSourceFile,
@@ -15,9 +15,9 @@ describe('convertMethodsExpression', () => {
     );
 
     expect(
-      convertedMethodExpressions.map((item) => formatCode(item.script))
+      convertedMethodExpressions.map((item) => formatScript(item.script))
     ).toEqual(
-      collectConvertedMethodExpression.map((item) => formatCode(item.script))
+      collectConvertedMethodExpression.map((item) => formatScript(item.script))
     );
   });
 });
